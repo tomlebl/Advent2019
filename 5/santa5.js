@@ -5,13 +5,10 @@ const program = fs
    .split(',')
    .map(input => Number(input))
 
-const test = [3, 0, 4, 0, 99]
-const test2 = [1002, 4, 3, 4, 33]
-const test3 = [1101, 100, -1, 4, 0]
-
 const runProgram = (array, input) => {
    const output = []
    let stepSize = 1
+
    for (let i = 0; i < array.length; i = i + stepSize) {
       const instArr = array[i].toString().split('')
       const instLength = instArr.length
@@ -34,6 +31,8 @@ const runProgram = (array, input) => {
 
       const par1Value = c === '0' ? array[array[i + 1]] : array[i + 1]
       const par2Value = b === '0' ? array[array[i + 2]] : array[i + 2]
+      const par3Value = a === '0' ? array[i + 3] : i + 3
+
       let exit = false
 
       switch (opCode) {
@@ -53,6 +52,36 @@ const runProgram = (array, input) => {
             output.push([array[array[i + 1]], i])
             stepSize = 2
             break
+         case '5':
+            if (par1Value != 0) {
+               stepSize = par2Value - i
+            } else {
+               stepSize = 3
+            }
+            break
+         case '6':
+            if (par1Value === 0) {
+               stepSize = par2Value - i
+            } else {
+               stepSize = 3
+            }
+            break
+         case '7':
+            if (par1Value < par2Value) {
+               array[par3Value] = 1
+            } else {
+               array[par3Value] = 0
+            }
+            stepSize = 4
+            break
+         case '8':
+            if (array[par1Value] === array[par2Value]) {
+               array[par3Value] = 1
+            } else {
+               array[par3Value] = 0
+            }
+            stepSize = 4
+            break
          case '9':
             exit = true
             break
@@ -66,4 +95,4 @@ const runProgram = (array, input) => {
    }
 }
 
-console.log(runProgram(program, 1))
+console.log(runProgram(program, 5))
