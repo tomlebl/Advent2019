@@ -17,7 +17,7 @@ const runProgram = (array, input) => {
 		if (array[i] === 3) {
 			array[array[i + 1]] = input
 			stepSize = 2
-		} else if (array[i] === 4) {
+		} else if (array[i] === 4 || array[i] === 104) {
 			output.push([array[array[i + 1]], i])
 			stepSize = 2
 		} else if (array[i] === 1) {
