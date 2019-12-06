@@ -49,7 +49,7 @@ const runProgram = (array, input) => {
             stepSize = 2
             break
          case '4':
-            output.push([array[array[i + 1]], i])
+            output.push([par1Value, i])
             stepSize = 2
             break
          case '5':
