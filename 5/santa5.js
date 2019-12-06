@@ -34,32 +34,36 @@ const runProgram = (array, input) => {
 
       const par1Value = c === '0' ? array[array[i + 1]] : array[i + 1]
       const par2Value = b === '0' ? array[array[i + 2]] : array[i + 2]
+      let exit = false
 
-      if (opCode === '3') {
-         array[array[i + 1]] = input
-         stepSize = 2
-      } else if (opCode === '4') {
-         output.push([array[array[i + 1]], i])
-         stepSize = 2
-      } else if (opCode === '9' || instArr[instLength - 2] === '9') {
-         return output
-      } else {
-         if (opCode === '1') {
+      switch (opCode) {
+         case '1':
             array[array[i + 3]] = par1Value + par2Value
-         } else if (opCode === '2') {
+            stepSize = 4
+            break
+         case '2':
             array[array[i + 3]] = par1Value * par2Value
-         }
+            stepSize = 4
+            break
+         case '3':
+            array[array[i + 1]] = input
+            stepSize = 2
+            break
+         case '4':
+            output.push([array[array[i + 1]], i])
+            stepSize = 2
+            break
+         case '9':
+            exit = true
+            break
+         default:
+            console.log('False instruction')
+      }
 
-         stepSize = 4
+      if (exit || instArr[instLength - 2] === '9') {
+         return output
       }
    }
 }
 
 console.log(runProgram(program, 1))
-
-// } else if (instArr[instArr.length - 1] === '1') {
-//     array[array[i + 3]] = array[array[i + 1]] + array[array[i + 2]]
-//     stepSize = 4
-//  } else if (instArr[instArr.length - 1] === '2') {
-//     array[array[i + 3]] = array[array[i + 1]] * array[array[i + 2]]
-//     stepSize = 4
