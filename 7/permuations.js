@@ -26,4 +26,4 @@ function permutateWithoutRepetitions(permutationOptions) {
    return permutations
 }
 
-console.log(permutateWithoutRepetitions([0, 1, 2, 3, 4]).length)
+module.exports = { permutateWithoutRepetitions }
