@@ -5,12 +5,7 @@ const program = fs
    .split(',')
    .map(input => Number(input))
 
-const test = [3, 15, 3, 16, 1002, 16, 10, 16, 1, 16, 15, 15, 4, 15, 99, 0, 0]
-const output = [0]
-
-const runProgram = (array, amp, phase) => {
-   const output = [0]
-   let outputBuffer = [...output]
+const runProgram = (array, amp, phase, input) => {
    let stepSize = 1
    let inputCount = 0
 
@@ -50,13 +45,12 @@ const runProgram = (array, amp, phase) => {
             stepSize = 4
             break
          case '3':
-            array[array[i + 1]] = inputCount === 0 ? phase[amp] : output[amp]
-            console.log(array[array[i + 1]])
+            array[array[i + 1]] = inputCount === 0 ? phase[amp] : input
             stepSize = 2
             inputCount++
             break
          case '4':
-            outputBuffer.push(par1Value)
+            output = par1Value
             stepSize = 2
             break
          case '5':
@@ -100,7 +94,10 @@ const runProgram = (array, amp, phase) => {
          return output
       }
    }
+   console.log(program)
 }
+
+//PART1
 
 function permutateWithoutRepetitions(permutationOptions) {
    if (permutationOptions.length === 1) {
@@ -131,7 +128,18 @@ function permutateWithoutRepetitions(permutationOptions) {
 }
 
 const phaseArr = permutateWithoutRepetitions([0, 1, 2, 3, 4])
+let maxThruster = 0
 
-for (let amp = 0; amp <= 4; amp++) {
-   console.log(runProgram(test, amp, [4, 3, 2, 1, 0]))
-}
+phaseArr.forEach(phase => {
+   let currentOutput = 0
+
+   for (let amp = 0; amp <= 4; amp++) {
+      currentOutput = runProgram(program, amp, phase, currentOutput)
+   }
+   //console.log(currentOutput)
+   if (currentOutput > maxThruster) {
+      maxThruster = currentOutput
+   }
+})
+
+console.log(maxThruster)
