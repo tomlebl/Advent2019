@@ -6,59 +6,28 @@ const program = fs
 	.split(',')
 	.map(input => Number(input))
 
-const test = [3, 15, 3, 16, 1002, 16, 10, 16, 1, 16, 15, 15, 4, 15, 99, 0, 0]
-
-const test2 = [
-	3,
-	26,
-	1001,
-	26,
-	-4,
-	26,
-	3,
-	27,
-	1002,
-	27,
-	2,
-	27,
-	1,
-	27,
-	26,
-	27,
-	4,
-	27,
-	1001,
-	28,
-	-1,
-	28,
-	1005,
-	28,
-	6,
-	99,
-	0,
-	0,
-	5
-]
-
 class Amplifier {
 	constructor(program, phase) {
 		this.program = [...program]
 		this.phase = phase
+		this.inputCount = 0
+		this.input = undefined
 		this.output = 0
 		this.pointer = 0
 		this.isRunning = true
 	}
 
-	runProgram(input, loop) {
+	getInput(output) {
+		this.input = output
+	}
+
+	runProgram() {
 		let stepSize = 1
-		let inputCount = 0
-		let output = undefined
 
 		for (let i = this.pointer; i < this.program.length; i = i + stepSize) {
 			const instArr = this.program[i].toString().split('')
 			const instLength = instArr.length
 			const opCode = instArr[instLength - 1]
-			//console.log('opcode', opCode)
 
 			let a = '0'
 			let b = '0'
@@ -91,15 +60,12 @@ class Amplifier {
 					stepSize = 4
 					break
 				case '3':
-					console.log(input)
-					if (input != undefined) {
-						if (loop === 0) {
-							this.program[this.program[i + 1]] = inputCount === 0 ? this.phase : input
-							inputCount++
-						} else {
-							this.program[this.program[i + 1]] = input
-							input = undefined
+					if (this.input != undefined) {
+						this.program[this.program[i + 1]] = this.inputCount === 0 ? this.phase : this.input
+						if (this.inputCount > 0) {
+							this.input = undefined
 						}
+						this.inputCount++
 						stepSize = 2
 					} else {
 						this.pointer = i
@@ -156,27 +122,33 @@ class Amplifier {
 	}
 }
 
-// const phaseArr = permutateWithoutRepetitions([0, 1, 2, 3, 4])
-// let maxThruster = 0
+const phaseArr = permutateWithoutRepetitions([5, 6, 7, 8, 9])
+let maxThruster = 0
 
-const phase = [9, 8, 7, 6, 5]
+//const phase = [9, 7, 8, 5, 6]
 
-const ampA = new Amplifier(test2, phase[0])
-const ampB = new Amplifier(test2, phase[1])
-const ampC = new Amplifier(test2, phase[2])
-const ampD = new Amplifier(test2, phase[3])
-const ampE = new Amplifier(test2, phase[4])
+phaseArr.forEach(phase => {
+	const ampA = new Amplifier(program, phase[0])
+	const ampB = new Amplifier(program, phase[1])
+	const ampC = new Amplifier(program, phase[2])
+	const ampD = new Amplifier(program, phase[3])
+	const ampE = new Amplifier(program, phase[4])
 
-let loop = 0
+	do {
+		ampA.getInput(ampE.output)
+		ampA.runProgram()
+		ampB.getInput(ampA.output)
+		ampB.runProgram()
+		ampC.getInput(ampB.output)
+		ampC.runProgram()
+		ampD.getInput(ampC.output)
+		ampD.runProgram()
+		ampE.getInput(ampD.output)
+		ampE.runProgram()
+		if (ampE.output > maxThruster) {
+			maxThruster = ampE.output
+		}
+	} while (ampE.isRunning)
+})
 
-do {
-	ampA.runProgram(ampE.output, loop)
-	ampB.runProgram(ampA.output, loop)
-	ampC.runProgram(ampB.output, loop)
-	ampD.runProgram(ampC.output, loop)
-	ampE.runProgram(ampD.output, loop)
-	loop++
-	console.log(ampE.output)
-} while (ampE.isRunning)
-
-console.log(ampE)
+console.log(maxThruster)

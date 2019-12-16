@@ -109,7 +109,6 @@ const phaseArr = permutateWithoutRepetitions([0, 1, 2, 3, 4])
 let maxThruster = 0
 
 phaseArr.forEach(phase => {
-	let currentOutput = 0
 	const ampA = new Amplifier(program, phase[0])
 	const ampB = new Amplifier(program, phase[1])
 	const ampC = new Amplifier(program, phase[2])
