@@ -73,8 +73,6 @@ const targetArr = []
 let angleCount = 0
 let distanceCount = 0
 
-console.log(anglesAsterArr.length)
-
 do {
 	// console.log(angleCount, distanceCount)
 	if (anglesAsterArr[angleCount][distanceCount]) {
