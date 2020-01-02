@@ -6,12 +6,12 @@ const program = fs
 	.map(input => Number(input))
 
 class Robot {
-	constructor(program) {
+	constructor(program, input) {
 		this.program = [...program]
 		this.output = []
 		this.relativeBase = 0
 		this.memory = new Map()
-		this.input = 0
+		this.input = input
 		this.coordinates = { x: 0, y: 0 }
 		this.canvas = new Map()
 		this.direction = 0
@@ -177,12 +177,53 @@ class Robot {
 
 		this.output = []
 	}
+
+	printCanvas() {
+		let iterator = this.canvas.values()
+		const canvasArr = Array.from(this.canvas.keys()).map(panel => {
+			const newPanel = panel.split(';')
+			newPanel.push(iterator.next().value)
+			return newPanel
+		})
+
+		const canvasArr3D = []
+		const rowCoordinates = []
+
+		canvasArr.forEach(panel => {
+			if (!rowCoordinates.includes(panel[1])) {
+				rowCoordinates.push(panel[1])
+			}
+		})
+
+		rowCoordinates.forEach(coordinate => {
+			const row = canvasArr.filter(panel => coordinate === panel[1])
+			canvasArr3D.push(row)
+		})
+
+		const print = canvasArr3D.map(row => {
+			const rowPrint = []
+			for (let i = 0; i < row.length; i++) {
+				const currentPannel = row.find(panel => Number(panel[0]) === i)
+
+				if (!currentPannel || currentPannel[2] === 0) {
+					rowPrint.push(' ')
+				} else {
+					rowPrint.push('#')
+				}
+			}
+			return rowPrint.join('')
+		})
+
+		console.log(print)
+	}
 }
 
-const paintingRobot = new Robot(program)
-
-paintingRobot.runProgram()
-
 //PART 1
+const robot1 = new Robot(program, 0)
+robot1.runProgram()
+console.log(robot1.canvas.size)
 
-console.log(paintingRobot.canvas.size)
+//PART 2
+const robot2 = new Robot(program, 1)
+robot2.runProgram()
+robot2.printCanvas()
